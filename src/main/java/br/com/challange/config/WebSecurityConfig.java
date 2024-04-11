@@ -3,10 +3,12 @@ package br.com.challange.config;
 import br.com.challange.security.jwt.AuthEntryPointJwt;
 import br.com.challange.security.jwt.AuthTokenFilter;
 import br.com.challange.security.services.UserDetailsServiceImpl;
+import br.com.challange.util.Permissions;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -76,6 +78,9 @@ public class WebSecurityConfig {
                     .authenticationEntryPoint(unauthorizedHandler)
                     .and().authorizeHttpRequests((authz) -> authz
                                     .requestMatchers(PUBLIC_PATHS).permitAll()
+                                    .requestMatchers(HttpMethod.POST, "/user").hasAnyAuthority(Permissions.ADMINISTRADOR)
+                                    .requestMatchers(HttpMethod.POST, "/marking").hasAnyAuthority(Permissions.USUARIO)
+                                    .requestMatchers(HttpMethod.GET, "/marking").hasAnyAuthority(Permissions.USUARIO)
                                     .anyRequest().authenticated()
                     )
                     .httpBasic(withDefaults());
