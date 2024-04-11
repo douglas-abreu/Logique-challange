@@ -19,7 +19,7 @@ public class UserController {
     private final UserService service;
     private final JwtUtils jwtUtils;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<ApiResponse<User>> saveUser(@RequestBody User user) {
         ApiResponse<User> response = service.saveUser(user);
         return ResponseEntity.status(response.getStatus()).body(response);

@@ -1,5 +1,6 @@
 package br.com.challange.service;
 
+import br.com.challange.models.Permission;
 import br.com.challange.models.User;
 import br.com.challange.repository.UserRepository;
 import br.com.challange.response.ApiResponse;
@@ -9,6 +10,7 @@ import br.com.challange.security.services.UserDetailsImpl;
 import br.com.challange.service.criteria.UserCriteria;
 import br.com.challange.util.Constants;
 import br.com.challange.util.MsgSystem;
+import br.com.challange.util.Permissions;
 import br.com.challange.util.Validation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
@@ -35,19 +37,6 @@ public class UserService {
 
     public ApiResponse<User> saveUser(User user){
         return verification(user, HttpStatus.CREATED);
-    }
-
-    public ApiResponse<User> getUserById(Integer id){
-        ApiResponse<User> userApiResponse = new ApiResponse<>();
-        repository.findById(id).ifPresentOrElse(
-                it ->
-                        userApiResponse.of(HttpStatus.OK, MsgSystem.sucGet(Constants.USUARIO),it),
-                () ->
-                        userApiResponse.of(HttpStatus.NOT_FOUND, MsgSystem.errGet(Constants.USUARIO))
-        );
-
-        return userApiResponse;
-
     }
 
 
@@ -95,11 +84,17 @@ public class UserService {
     }
 
     public ApiResponse<User> verification(User user, HttpStatus status) {
+        Permission permissionLogged = getUserLogged().getData().getPermission();
         ApiResponse<User> response = new ApiResponse<>();
+        if(!permissionLogged.getName().equals(Permissions.ADMINISTRADOR))
+            return response.of(HttpStatus.BAD_REQUEST,
+                    "Usuário "+user.getUsername()+" não possui permissão!");
         String msgSuc = MsgSystem.sucCreate(Constants.USUARIO);
 
         Object[][] args = {
-            {user.getUsername(), "Usuário"}
+            {user.getUsername(), "Usuário"},
+            {user.getPermission(), "Permissão"},
+            {user.getPassword(), "Senha"},
         };
         String msgErr = Validation.isEmptyFields(args);
         if(!msgErr.isEmpty())
@@ -112,7 +107,7 @@ public class UserService {
             if (Validation.isEmptyOrNull(user.getId()) || !repository.existsById(user.getId()))
                 return response.of(HttpStatus.NOT_FOUND,
                         msgSuc = MsgSystem.sucCreate(Constants.USUARIO));
-        user.setPassword(passwordEncoder.encode(user.getUsername()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User userSaved = repository.save(user);
         return response.of(status, msgSuc, userSaved);
     }
