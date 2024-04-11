@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("marking")
 public class MarkingController {
 
-    private UserService userService;
-    private MarkingService markingService;
+    private final UserService userService;
+    private final MarkingService markingService;
 
 
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<ApiResponse<Marking>> addMarking(MarkingCriteria criteria) {
         ApiResponse<Marking> response = markingService.markingRegistration(criteria);
         return ResponseEntity.status(response.getStatus()).body(response);

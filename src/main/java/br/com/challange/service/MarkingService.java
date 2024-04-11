@@ -8,21 +8,28 @@ import br.com.challange.service.criteria.MarkingCriteria;
 import br.com.challange.util.FormatUtil;
 import br.com.challange.util.MsgSystem;
 import br.com.challange.util.Validation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.List;
 
 import static br.com.challange.util.Constants.MARCACAO;
 
+@Service
+@RequiredArgsConstructor
 public class MarkingService {
 
-    private MarkingRepository markingRepository;
-    private UserService userService;
+    private final MarkingRepository markingRepository;
+    private final UserService userService;
 
     public ApiResponse<Marking> markingRegistration(MarkingCriteria criteria){
         User userLogged = userService.getUserLogged().getData();
+        criteria.setUserId(userLogged.getId());
+        criteria.setMarkingDate(FormatUtil.getOnlyDate());
         List<Marking> markingList = markingRepository.findAll(
                 createSpecification(criteria),
                 Sort.by(Sort.Direction.DESC, "id"));
@@ -36,13 +43,14 @@ public class MarkingService {
     public Marking createMarking(User user){
         Marking marking = new Marking();
         marking.setUser(user);
-        marking.setOpeningMark(FormatUtil.dateTimeNow());
+        marking.setOpeningMark(FormatUtil.getDateFromLocalDateTime());
+        marking.setMarkingDate(FormatUtil.getOnlyDate());
         markingRepository.save(marking);
         return marking;
     }
 
     public Marking updateMarking(Marking marking){
-        marking.setClosingMark(FormatUtil.dateTimeNow());
+        marking.setClosingMark(FormatUtil.getDateFromLocalDateTime());
         markingRepository.save(marking);
         return marking;
     }
@@ -59,8 +67,10 @@ public class MarkingService {
         ApiResponse<Marking> response = new ApiResponse<>();
         if(markingList.isEmpty())
             return response.of(HttpStatus.OK, MsgSystem.sucCreate(MARCACAO), createMarking(userLogged));
+        if(Validation.isEmptyOrNull(markingList.get(0).getClosingMark()))
+            return response.of(HttpStatus.OK, MsgSystem.sucUpdate(MARCACAO), updateMarking(markingList.get(0)));
 
-        return response.of(HttpStatus.OK, MsgSystem.sucUpdate(MARCACAO), updateMarking(markingList.get(0))) ;
+        return response.of(HttpStatus.BAD_REQUEST, "Usuário já encerrou o ponto de hoje");
     }
 
     private Specification<Marking> createSpecification(MarkingCriteria criteria){

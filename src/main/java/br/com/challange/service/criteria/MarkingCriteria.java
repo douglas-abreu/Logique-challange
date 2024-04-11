@@ -5,13 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.Date;
+
 
 @Data
 @NoArgsConstructor
 public class MarkingCriteria {
 
     private Integer userId;
-    private String markingDate;
+    private Date markingDate;
 
 
     public static Specification<Marking> filterByUser(Integer userId) {
@@ -19,9 +21,9 @@ public class MarkingCriteria {
                 criteriaBuilder.equal(root.get("user").get("id"), userId);
     }
 
-    public static Specification<Marking> filterByMarkingDate(String markingDate) {
+    public static Specification<Marking> filterByMarkingDate(Date markingDate) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.like(root.get("markingDate"), markingDate);
+                criteriaBuilder.equal(root.get("markingDate"), markingDate);
     }
 
 }
