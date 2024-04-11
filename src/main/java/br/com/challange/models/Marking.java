@@ -16,13 +16,13 @@ public class Marking {
     private Integer id;
 
     @Column(name = "data_marcacao")
-    private String markingDate;
+    private Date markingDate;
 
     @Column(name = "marcacao_abertura")
-    private String openingMark;
+    private Date openingMark;
 
     @Column(name = "marcacao_fechamento")
-    private String closingMark;
+    private Date closingMark;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "usuario_id")
