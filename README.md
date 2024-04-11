@@ -10,10 +10,10 @@ Usuário: `admin` <br>
 Senha: `admin`
 
 Usuário: `jornada8` <br>
-Senha: `jornada8`
+Senha: `123123`
 
 Usuário: `jornada6` <br>
-Senha: `jornada6`
+Senha: `123123`
 
 ### Banco de dados
 
