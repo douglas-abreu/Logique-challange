@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
 
 @Data
 @Entity
@@ -24,7 +23,7 @@ public class User {
     private String password;
 
     @Column(name = "carga_horaria")
-    private Date workload;
+    private String workload;
 
     @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JoinColumn(name = "permission_id")
