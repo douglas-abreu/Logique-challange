@@ -41,7 +41,7 @@ public class WebSecurityConfig {
     }
 
     private final String[] PUBLIC_PATHS = {
-            "/login/**"
+            "/user/login"
     };
 
     @Bean
@@ -78,7 +78,7 @@ public class WebSecurityConfig {
                     .authenticationEntryPoint(unauthorizedHandler)
                     .and().authorizeHttpRequests((authz) -> authz
                                     .requestMatchers(PUBLIC_PATHS).permitAll()
-                                    .requestMatchers(HttpMethod.POST, "/user").hasAnyAuthority(Permissions.ADMINISTRADOR)
+                                    .requestMatchers(HttpMethod.POST, "/user/create").hasAnyAuthority(Permissions.ADMINISTRADOR)
                                     .requestMatchers(HttpMethod.POST, "/marking").hasAnyAuthority(Permissions.USUARIO)
                                     .requestMatchers(HttpMethod.GET, "/marking").hasAnyAuthority(Permissions.USUARIO)
                                     .anyRequest().authenticated()
