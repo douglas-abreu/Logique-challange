@@ -1,9 +1,9 @@
-# Logique-challange
+# Ponto-API
 
 
 Java: 17
 
-### Usuários Pre-definidos
+### Usuários Pré-definidos
 
 
 Usuário: `admin` <br>
