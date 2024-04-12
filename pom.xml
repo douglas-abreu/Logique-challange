@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com</groupId>
-	<artifactId>Logique-challange</artifactId>
+	<artifactId>ponto-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>challange</name>
 	<description>Challange made by Logique</description>

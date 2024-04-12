@@ -28,7 +28,7 @@ values (1, 'administrador'),
     ON CONFLICT DO NOTHING;
 
 INSERT INTO entidades.usuario(usuario, senha, permissao_id)
-values ('admin', '$2a$10$na8krNR55AUTpE1cW6/Qm.zTaxyhNWCOvqjgwZ/1VNF7se6I.RyIe', 1)
+values ('admin', '$2a$10$mDjXyTb.nTnvz/IBfUJGOO1/6r1XVX/X5.pv.7wNNeDVW9XgZP.9O', 1)
     ON CONFLICT DO NOTHING;
 
 
