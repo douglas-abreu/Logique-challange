@@ -1,7 +1,7 @@
 package br.com.challange.controller;
 
+import br.com.challange.DTO.ReportDTO;
 import br.com.challange.models.Marking;
-import br.com.challange.models.User;
 import br.com.challange.response.ApiResponse;
 import br.com.challange.service.MarkingService;
 import br.com.challange.service.UserService;
@@ -25,9 +25,9 @@ public class MarkingController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
-//    @GetMapping("/")
-//    public ResponseEntity<ApiResponse<Marking>> addMarking(MarkingCriteria criteria) {
-//        ApiResponse<Marking> response = markingService.markingRegistration(criteria);
-//        return ResponseEntity.status(response.getStatus()).body(response);
-//    }
+    @GetMapping()
+    public ResponseEntity<ApiResponse<ReportDTO>> report(MarkingCriteria criteria) {
+        ApiResponse<ReportDTO> response = markingService.dayReport(criteria);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
 }

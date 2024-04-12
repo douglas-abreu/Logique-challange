@@ -7,13 +7,11 @@ import br.com.challange.response.ApiResponse;
 import br.com.challange.security.jwt.JwtResponse;
 import br.com.challange.security.jwt.JwtUtils;
 import br.com.challange.security.services.UserDetailsImpl;
-import br.com.challange.service.criteria.UserCriteria;
 import br.com.challange.util.Constants;
 import br.com.challange.util.MsgSystem;
 import br.com.challange.util.Permissions;
 import br.com.challange.util.Validation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -61,6 +59,7 @@ public class UserService {
 
     }
 
+
     public ApiResponse<User> getUserLogged() {
         ApiResponse<User> response = new ApiResponse<>();
 
@@ -73,15 +72,6 @@ public class UserService {
         return response.of(HttpStatus.NOT_FOUND, "Usuário não está logado");
     }
 
-    private Specification<User> createSpecification(UserCriteria userCriteria){
-        Specification<User> specification = Specification.where(null);
-
-        if(userCriteria.getKeyword() != null)
-            specification = specification
-                    .or(UserCriteria.searchByUsername(userCriteria.getKeyword()));
-
-        return specification;
-    }
 
     public ApiResponse<User> verification(User user, HttpStatus status) {
         Permission permissionLogged = getUserLogged().getData().getPermission();
@@ -95,6 +85,7 @@ public class UserService {
             {user.getUsername(), "Usuário"},
             {user.getPermission(), "Permissão"},
             {user.getPassword(), "Senha"},
+            {user.getWorkload(), "Jornada"}
         };
         String msgErr = Validation.isEmptyFields(args);
         if(!msgErr.isEmpty())
